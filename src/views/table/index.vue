@@ -43,10 +43,10 @@
       <el-table-column label="家乡" align="center">
         <template slot-scope="scope">{{ scope.row.hometown }}</template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="date" width="200">
+      <el-table-column align="center" prop="created_at" label="最近更新时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
-          <span>{{ scope.row.date }}</span>
+          <span>{{dateFormat('YYYY-mm-dd HH:MM',scope.row.date) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -208,6 +208,30 @@ export default {
       this.centerDialogVisible = true;
       this.student = row;
       console.log(index, row);
+    },
+
+    dateFormat(fmt, date) {
+      let ret = "";
+      date = new Date(date);
+      const opt = {
+        "Y+": date.getFullYear().toString(), // 年
+        "m+": (date.getMonth() + 1).toString(), // 月
+        "d+": date.getDate().toString(), // 日
+        "H+": date.getHours().toString(), // 时
+        "M+": date.getMinutes().toString(), // 分
+        "S+": date.getSeconds().toString() // 秒
+        // 有其他格式化字符需求可以继续添加，必须转化成字符串
+      };
+      for (let k in opt) {
+        ret = new RegExp("(" + k + ")").exec(fmt);
+        if (ret) {
+          fmt = fmt.replace(
+            ret[1],
+            ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, "0")
+          );
+        }
+      }
+      return fmt;
     }
   }
 };
